@@ -21,52 +21,41 @@ const blockH = 32;
 let prevX = 0;
 let prevY = 0;
 
-const paletteX = blockW * 4;
-const paletteY = blockH * 16;
+const paletteStartX = 6;
+const paletteStartY = 15;
+
 const paletteW = 32;
 const paletteH = 32;
 
-const days = 6
+const days = 6;
 
-const canvasW = blockW * (8 + 5 * days);
-const canvasH = blockH * 21;
+const canvasBlocksW = 8 + 5 * days;
+const boardBlocksH = 15;
+const paletteBlocksH = 4;
+
+const canvasW = blockW * canvasBlocksW;
+const canvasH = blockH * (boardBlocksH + paletteBlocksH);
 
 const arrayPaletteIcon = [
     [-1, 22, 23, 8, 9, 12, 18, 14, 16, 17, -1, -10, -11, -12, -13, -14],
     [-1, 6, 7, 8, 9, 10, 11, 12, 13, -1, -1, -15, -16, -17, -18, -19],
     [-1, 6, 7, 8, 9, 10, 11, 12, 13],
-    [-1, 6, 7, 8, 9, 10, 11, 14, 15],
-    [-1, 18, 19, 20, 21]
+    [-1, 6, 7, 8, 9, 10, 11, 14, 15, -1, -1, -1, 18, 19, 20, 21]
 ];
 const arrayPaletteColor = [
     [4, 4, 4, 4, 4, 4, 4, 4, 0, 0, -1, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2, 2, 2, 2, 2],
-    [3, 3, 3, 3, 3],
+    [2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 3, 3, 3, 3, 3]
 ];
 
 let selectIcon;
 let selectColor;
 
-let arrayBoardIcon = [];
-let arrayBoardColor = [];
-
-let arrayBoardIconPocket = [];
-let arrayBoardColorPocket = [];
-
-for (let i = 0; i < 16; i += 1) {
-    arrayBoardIcon[i] = [];
-    arrayBoardColor[i] = [];
-    arrayBoardIconPocket[i] = [];
-    arrayBoardColorPocket[i] = [];
-    for (let j = 0; j < 68; j += 1) {
-        arrayBoardIcon[i][j] = -1;
-        arrayBoardColor[i][j] = -1;
-        arrayBoardIconPocket[i][j] = -1;
-        arrayBoardColorPocket[i][j] = -1;
-    }
-}
+let arrayBoardIcon;
+let arrayBoardColor;
+let arrayBoardIconPocket;
+let arrayBoardColorPocket;
 
 const charaColors = [
     "rgb(255,255,255)",
@@ -108,7 +97,8 @@ onload = function() {
     
     images.onload = function(){
         makeCanvasPlayer();
-        initcanvas();
+        initArray();
+        initCanvas();
     }
 }
 
@@ -201,14 +191,35 @@ function makeCanvasPlayer() {
     }
 }
 
-function initcanvas(){
+function initArray(){
+    arrayBoardIcon = [];
+    arrayBoardColor = [];
+
+    arrayBoardIconPocket = [];
+    arrayBoardColorPocket = [];
+
+    for (let i = 0; i < boardBlocksH; i += 1) {
+        arrayBoardIcon[i] = [];
+        arrayBoardColor[i] = [];
+        arrayBoardIconPocket[i] = [];
+        arrayBoardColorPocket[i] = [];
+        for (let j = 0; j < canvasBlocksW; j += 1) {
+            arrayBoardIcon[i][j] = -1;
+            arrayBoardColor[i][j] = -1;
+            arrayBoardIconPocket[i][j] = -1;
+            arrayBoardColorPocket[i][j] = -1;
+        }
+    }
+}
+
+function initCanvas(){
     // 背景
     layerBase.fillStyle = "rgb(210, 240, 160)"
     layerBase.beginPath();
-    layerBase.fillRect(0, 0, canvasW, paletteY);
+    layerBase.fillRect(0, 0, canvasW, paletteStartY * blockH);
     layerBase.fillStyle = "rgb(240, 180, 120)"
     layerBase.beginPath();
-    layerBase.fillRect(0, paletteY, canvasW, canvasH - paletteY);
+    layerBase.fillRect(0, paletteStartY * blockH, canvasW, canvasH - paletteStartY * blockH);
     
     layerBase.textBaseline = "middle";
     
@@ -274,10 +285,10 @@ function initcanvas(){
     }
     
     // アイコンパレット
-    for(let j = 0; j < 5; j += 1) {
+    for(let j = 0; j < paletteBlocksH; j += 1) {
         for(let i = 0; i < 16; i += 1) {
-            let posX = paletteX + paletteW * i;
-            let posY = paletteY + paletteH * j;
+            let posX = paletteW * (i + paletteStartX);
+            let posY = paletteH * (j + paletteStartY);
             
             let colorNumber = arrayPaletteColor[j][i];
             drawIcon(layerBase, posX, posY, colorNumber)
@@ -291,9 +302,9 @@ function initcanvas(){
     
     // 横線
     layerBase.beginPath();
-    for(let i = 1; i < 17; i += 1) {
+    for(let i = 1; i < boardBlocksH; i += 1) {
         layerBase.moveTo(0, blockH * i);
-        layerBase.lineTo(blockW * 38, blockH * i)
+        layerBase.lineTo(blockW * canvasBlocksW, blockH * i)
         layerBase.lineWidth = 1;
     }
     layerBase.stroke();
@@ -336,7 +347,8 @@ function resetBoard(){
             playerNames[i] = inputName.value;
         }
         
-        initcanvas();
+        initArray();
+        initCanvas();
         layerIcon.clearRect(0, 0, canvasW, canvasH);
     }
 }
@@ -344,7 +356,7 @@ function resetBoard(){
 function moveStart(mx, my){
     movable = false;
     
-    if(my < paletteY){
+    if(my < paletteStartY * blockH){
         let ax = Math.floor(mx / blockW);
         let ay = Math.floor(my / blockH);
         
@@ -384,8 +396,8 @@ function moveStart(mx, my){
         }
     }
     else {
-        let ax = Math.floor(mx / blockW) - 4;
-        let ay = Math.floor((my - paletteY) / blockH);
+        let ax = Math.floor(mx / blockW) - paletteStartX;
+        let ay = Math.floor(my / blockH) - paletteStartY;
         
         if(ay < arrayPaletteIcon.length && ax < arrayPaletteIcon[ay].length){
             selectColor = arrayPaletteColor[ay][ax];
@@ -431,7 +443,7 @@ function moveEnd(){
     let ax = prevX;
     let ay = prevY;
     
-    if(ay * blockH >= paletteY){
+    if(ay >= paletteStartY){
         return
     }
     
