@@ -152,6 +152,7 @@ function setEventListener() {
             canvasMove.addEventListener("touchmove", touchmove);
             canvasMove.addEventListener("touchend", touchend);
             canvasMove.addEventListener("touchcancel",touchcancel);
+            canvasMove.style.touchAction = "pinch-zoom";
         }
     else {
         canvasMove.addEventListener("mousedown", mousedown);
@@ -502,7 +503,7 @@ function mouseleave(event) {
 }
 
 function touchstart(event) {
-    event.preventDefault();
+    //event.preventDefault();
     let rect = event.target.getBoundingClientRect();
     let fing = event.touches[0];
     mx = fing.pageX - rect.left;
@@ -511,10 +512,9 @@ function touchstart(event) {
     moveStart(mx, my);
 }
 function touchmove(event) {
-    if(movable == true) {
-        event.preventDefault();
-        drawIcon(layerMove, 0, 0, 1)
-    }
+//    if(movable == true) {
+//        event.preventDefault();
+//    }
     let rect = event.target.getBoundingClientRect();
     let fing = event.touches[0];
     mx = fing.pageX - rect.left;
@@ -523,11 +523,11 @@ function touchmove(event) {
     moving(mx, my);
 }
 function touchend(event) {
-    event.preventDefault();
+    //event.preventDefault();
     moveEnd();
 }
 function touchcancel(event) {
-    event.preventDefault();
+    //event.preventDefault();
     moveCancel();
 }
 
