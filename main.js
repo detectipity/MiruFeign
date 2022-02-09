@@ -158,9 +158,9 @@ function setEventListener() {
          || navigator.userAgent.indexOf("iPad") > 0
          || navigator.userAgent.indexOf("Android") > 0)
         ) {
-            canvasMove.addEventListener("touchstart",touchstart);
-            canvasMove.addEventListener("touchmove",touchmove);
-            canvasMove.addEventListener("touchend",touchend);
+            canvasMove.addEventListener("touchstart", touchstart);
+            canvasMove.addEventListener("touchmove", touchmove);
+            canvasMove.addEventListener("touchend", touchend);
             //canvasMove.addEventListener("touchcancel",touchcancel);
         }
     else {
@@ -224,7 +224,7 @@ function initcanvas(){
         }
     }
     if(activePlayers.length == 0) {
-        playerNames = ["ホワイトd", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
+        playerNames = ["ホワイトe", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
         activePlayers = [];
         activePlayersNumber = [];
         activePlayersIcon = [];
@@ -496,16 +496,17 @@ function touchstart(event) {
     
     moveStart(mx, my);
     
-    if(movable == true) {
-        document.addEventListener("touchmove", prevent, {passive: false});
-        drawIcon(layerMove, 0, 0, 1);
-    }
-    else {
-        document.removeEventListener("touchmove", prevent, {passive: false});
-    }
+//    if(movable == true) {
+//        document.addEventListener("touchmove", prevent, {passive: false});
+//        drawIcon(layerMove, 0, 0, 1);
+//    }
+//    else {
+//        document.removeEventListener("touchmove", prevent, {passive: false});
+//    }
     
 }
 function touchmove(event) {
+    event.preventDefault();
     let rect = event.target.getBoundingClientRect();
     let fing = event.touches[0];
     mx = fing.pageX - rect.left;
