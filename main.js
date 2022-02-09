@@ -491,7 +491,7 @@ function touchstart(event) {
     mx = fing.pageX - rect.left;
     my = fing.pageY - rect.top;
     
-    document.addEventListener("touchmove", scroll_control, { passive: false });
+    document.addEventListener("touchmove", prevent, {passive: false});
     
     moveStart(mx, my);
 }
@@ -509,13 +509,16 @@ function touchend(event) {
     mx = fing.pageX - rect.left;
     my = fing.pageY - rect.top;
     
-    document.addEventListener("touchmove", scroll_control, { passive: true });
+    document.removeEventListener("touchmove", prevent, {passive: false});
     
     moveEnd(mx, my);
 }
 function touchcancel(event) {
-    document.addEventListener("touchmove", scroll_control, { passive: true });
+    document.removeEventListener("touchmove", prevent, {passive: false});
     moveCancel();
+}
+function prevent(event) {
+    event.preventDefault();
 }
 
 function drawIcon(layer, posX, posY, iconNumber) {
