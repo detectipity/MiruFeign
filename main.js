@@ -161,7 +161,7 @@ function setEventListener() {
             canvasMove.addEventListener("touchstart",touchstart);
             canvasMove.addEventListener("touchmove",touchmove);
             canvasMove.addEventListener("touchend",touchend);
-            canvasMove.addEventListener("touchcancel",touchcancel);
+            //canvasMove.addEventListener("touchcancel",touchcancel);
         }
     else {
         canvasMove.addEventListener("mousedown", mousedown);
@@ -224,7 +224,7 @@ function initcanvas(){
         }
     }
     if(activePlayers.length == 0) {
-        playerNames = ["ホワイト", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
+        playerNames = ["ホワイトa", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
         activePlayers = [];
         activePlayersNumber = [];
         activePlayersIcon = [];
@@ -377,6 +377,7 @@ function moveStart(mx, my){
             }
             
             movable = true;
+            layerMove.addEventListener("touchmove", prevent, {passive: false});
         }
     }
     else {
@@ -388,6 +389,7 @@ function moveStart(mx, my){
             selectIcon = arrayPaletteIcon[ay][ax];
             
             movable = true;
+            layerMove.addEventListener("touchmove", prevent, {passive: false});
         }
     }
 }
@@ -417,6 +419,7 @@ function moveEnd(mx, my){
     }
     
     movable = false;
+    layerMove.removeEventListener("touchmove", prevent, {passive: false});
     
     layerMove.clearRect(0, 0, canvasW, canvasH);
     
@@ -491,7 +494,7 @@ function touchstart(event) {
     mx = fing.pageX - rect.left;
     my = fing.pageY - rect.top;
     
-    document.addEventListener("touchmove", prevent, {passive: false});
+    //document.addEventListener("touchmove", prevent, {passive: false});
     
     moveStart(mx, my);
 }
@@ -509,14 +512,15 @@ function touchend(event) {
     mx = fing.pageX - rect.left;
     my = fing.pageY - rect.top;
     
-    document.removeEventListener("touchmove", prevent, {passive: false});
+    //document.removeEventListener("touchmove", prevent, {passive: false});
     
     moveEnd(mx, my);
 }
 function touchcancel(event) {
-    document.removeEventListener("touchmove", prevent, {passive: false});
+    //document.removeEventListener("touchmove", prevent, {passive: false});
     moveCancel();
 }
+
 function prevent(event) {
     event.preventDefault();
 }
