@@ -342,6 +342,8 @@ function resetBoard(){
 }
 
 function moveStart(mx, my){
+    movable = false;
+    
     if(my < paletteY){
         let ax = Math.floor(mx / blockW);
         let ay = Math.floor(my / blockH);
@@ -429,7 +431,7 @@ function moveEnd(){
     let ax = prevX;
     let ay = prevY;
     
-    if(ay * blockH > paletteY){
+    if(ay * blockH >= paletteY){
         return
     }
     
@@ -454,9 +456,6 @@ function moveEnd(){
     
     arrayBoardColor[ay][ax] = selectColor;
     arrayBoardIcon[ay][ax] = selectIcon;
-    
-    selectColor = -1;
-    selectIcon = -1;
 }
 
 function moveCancel(){
