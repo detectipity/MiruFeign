@@ -501,6 +501,7 @@ function touchstart(event) {
 function touchmove(event) {
     if(movable == true) {
         event.preventDefault();
+        drawIcon(layerMove, 0, 0, 1)
     }
     let rect = event.target.getBoundingClientRect();
     let fing = event.touches[0];
