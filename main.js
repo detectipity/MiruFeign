@@ -37,13 +37,13 @@ const canvasW = blockW * canvasBlocksW;
 const canvasH = blockH * (boardBlocksH + paletteBlocksH);
 
 const arrayPaletteIcon = [
-    [-1, 22, 23, 8, 9, 12, 18, 14, 16, 17, -1, -10, -11, -12, -13, -14],
+    [-1, 22, 23, 8, 9, 12, 18, 14,　-1, 16, 17, -10, -11, -12, -13, -14],
     [-1, 6, 7, 8, 9, 10, 11, 12, 13, -1, -1, -15, -16, -17, -18, -19],
-    [-1, 6, 7, 8, 9, 10, 11, 12, 13],
-    [-1, 6, 7, 8, 9, 10, 11, 14, 15, -1, -1, -1, 18, 19, 20, 21]
+    [-1, 6, 7, 8, 9, 10, 11, 12, 13, 24, 25],
+    [-1, 6, 7, 8, 9, 10, 11, 14, 15, -1, 26, -1, 18, 19, 20, 21]
 ];
 const arrayPaletteColor = [
-    [4, 4, 4, 4, 4, 4, 4, 4, 0, 0, -1, 0, 0, 0, 0, 0],
+    [4, 4, 4, 4, 4, 4, 4, 4, -1, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 1, 1, 1, 1],
     [2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 3, 3, 3, 3, 3]
@@ -172,7 +172,7 @@ function makeCanvasPlayer() {
     formPlayers.appendChild(canvasPlayer);
     
     for(let i = 0; i < 15; i += 1) {
-        let iconNumber = 24 + i + Math.floor(i / 5)
+        let iconNumber = 27 + i
         let posX = originW * ((i % 3) * 8);
         let posY = originH * Math.floor(i / 3);
         drawIcon(layerBasePlayer, posX, posY, iconNumber)
@@ -236,6 +236,7 @@ function initCanvas(){
         }
     }
     if(activePlayers.length == 0) {
+        // フォーム未入力の場合のデフォルトデータ
         playerNames = ["ホワイト", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
         activePlayers = [];
         activePlayersNumber = [];
@@ -244,7 +245,7 @@ function initCanvas(){
             if(playerNames[i] != "") {
                 activePlayers.push(playerNames[i]);
                 activePlayersNumber.push(i);
-                activePlayersIcon.push(24 + i + Math.floor(i / 5));
+                activePlayersIcon.push(27 + i);
             }
         }
     }
@@ -503,18 +504,18 @@ function mouseleave(event) {
 }
 
 function touchstart(event) {
+    let rect = event.target.getBoundingClientRect();
     let fing = event.touches[0];
-    let rect = fing.target.getBoundingClientRect();
-    mx = fing.pageX - rect.left;
-    my = fing.pageY - rect.top;
+    mx = fing.clientX - rect.left;
+    my = fing.clientY - rect.top;
     
     moveStart(mx, my);
 }
 function touchmove(event) {
+    let rect = event.target.getBoundingClientRect();
     let fing = event.touches[0];
-    let rect = fing.target.getBoundingClientRect();
-    mx = fing.pageX - rect.left;
-    my = fing.pageY - rect.top;
+    mx = fing.clientX - rect.left;
+    my = fing.clientY - rect.top;
     
     moving(mx, my);
 }
@@ -533,10 +534,10 @@ function drawIcon(layer, posX, posY, iconNumber) {
 
 function drawInitial(layer, posX, posY, iconNumber) {
     let word;
-    if(iconNumber >= 24) {
+    if(iconNumber >= 27) {
         word = charasInitial[iconNumber];
         
-        const colorNumber = iconNumber - 24 - Math.floor((iconNumber - 24) / 6)
+        const colorNumber = iconNumber - 27
         
         if(charaFontColors[colorNumber] == true) {
             layer.fillStyle = "black";
