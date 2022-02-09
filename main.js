@@ -224,7 +224,7 @@ function initcanvas(){
         }
     }
     if(activePlayers.length == 0) {
-        playerNames = ["ホワイトa", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
+        playerNames = ["ホワイトb", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
         activePlayers = [];
         activePlayersNumber = [];
         activePlayersIcon = [];
@@ -377,7 +377,6 @@ function moveStart(mx, my){
             }
             
             movable = true;
-            layerMove.addEventListener("touchmove", prevent, {passive: false});
         }
     }
     else {
@@ -389,7 +388,6 @@ function moveStart(mx, my){
             selectIcon = arrayPaletteIcon[ay][ax];
             
             movable = true;
-            layerMove.addEventListener("touchmove", prevent, {passive: false});
         }
     }
 }
@@ -419,7 +417,6 @@ function moveEnd(mx, my){
     }
     
     movable = false;
-    layerMove.removeEventListener("touchmove", prevent, {passive: false});
     
     layerMove.clearRect(0, 0, canvasW, canvasH);
     
@@ -494,9 +491,13 @@ function touchstart(event) {
     mx = fing.pageX - rect.left;
     my = fing.pageY - rect.top;
     
-    //document.addEventListener("touchmove", prevent, {passive: false});
-    
     moveStart(mx, my);
+    
+    if(movable == true) {
+        document.addEventListener("touchmove", prevent, {passive: false});
+    }
+    
+    drawIcon(layerMove, 0, 0, 1);
 }
 function touchmove(event) {
     let rect = event.target.getBoundingClientRect();
@@ -505,6 +506,8 @@ function touchmove(event) {
     my = fing.pageY - rect.top;
     
     moving(mx, my);
+    
+    drawIcon(layerMove, 0, 0, 2);
 }
 function touchend(event) {
     let rect = event.target.getBoundingClientRect();
@@ -512,12 +515,12 @@ function touchend(event) {
     mx = fing.pageX - rect.left;
     my = fing.pageY - rect.top;
     
-    //document.removeEventListener("touchmove", prevent, {passive: false});
-    
     moveEnd(mx, my);
+    document.removeEventListener("touchmove", prevent, {passive: false});
+    
+    drawIcon(layerMove, 0, 0, 3);
 }
 function touchcancel(event) {
-    //document.removeEventListener("touchmove", prevent, {passive: false});
     moveCancel();
 }
 
