@@ -491,6 +491,8 @@ function touchstart(event) {
     mx = fing.pageX - rect.left;
     my = fing.pageY - rect.top;
     
+    document.addEventListener("touchmove", scroll_control, { passive: false });
+    
     moveStart(mx, my);
 }
 function touchmove(event) {
@@ -507,9 +509,12 @@ function touchend(event) {
     mx = fing.pageX - rect.left;
     my = fing.pageY - rect.top;
     
+    document.addEventListener("touchmove", scroll_control, { passive: true });
+    
     moveEnd(mx, my);
 }
 function touchcancel(event) {
+    document.addEventListener("touchmove", scroll_control, { passive: true });
     moveCancel();
 }
 
