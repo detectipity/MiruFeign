@@ -224,7 +224,7 @@ function initcanvas(){
         }
     }
     if(activePlayers.length == 0) {
-        playerNames = ["ホワイトf", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
+        playerNames = ["ホワイトg", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
         activePlayers = [];
         activePlayersNumber = [];
         activePlayersIcon = [];
@@ -518,17 +518,18 @@ function touchmove(event) {
     moving(mx, my);
 }
 function touchend(event) {
-    event.preventDefault();
-    let rect = event.target.getBoundingClientRect();
-    let fing = event.touches[0];
-    mx = fing.pageX - rect.left;
-    my = fing.pageY - rect.top;
-    
     if(movable == true) {
         drawIcon(layerMove, 0, 0, 3);
     }
     
-    moveEnd(mx, my);
+//    event.preventDefault();
+//    let rect = event.target.getBoundingClientRect();
+//    let fing = event.touches[0];
+//    mx = fing.pageX - rect.left;
+//    my = fing.pageY - rect.top;
+//
+//
+//    moveEnd(mx, my);
 }
 function touchcancel(event) {
     moveCancel();
