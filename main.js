@@ -232,7 +232,7 @@ function initCanvas(){
         if(playerNames[i] != "") {
             activePlayers.push(playerNames[i]);
             activePlayersNumber.push(i);
-            activePlayersIcon.push(24 + i + Math.floor(i / 5));
+            activePlayersIcon.push(27 + i);
         }
     }
     if(activePlayers.length == 0) {
