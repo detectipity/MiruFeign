@@ -224,7 +224,7 @@ function initcanvas(){
         }
     }
     if(activePlayers.length == 0) {
-        playerNames = ["ホワイトb", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
+        playerNames = ["ホワイトc", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
         activePlayers = [];
         activePlayersNumber = [];
         activePlayersIcon = [];
@@ -495,9 +495,12 @@ function touchstart(event) {
     
     if(movable == true) {
         document.addEventListener("touchmove", prevent, {passive: false});
+        drawIcon(layerMove, 0, 0, 1);
+    }
+    else {
+        document.removeEventListener("touchmove", prevent, {passive: false});
     }
     
-    drawIcon(layerMove, 0, 0, 1);
 }
 function touchmove(event) {
     let rect = event.target.getBoundingClientRect();
@@ -507,7 +510,9 @@ function touchmove(event) {
     
     moving(mx, my);
     
-    drawIcon(layerMove, 0, 0, 2);
+    if(movable == true) {
+        drawIcon(layerMove, 0, 0, 2);
+    }
 }
 function touchend(event) {
     let rect = event.target.getBoundingClientRect();
@@ -515,10 +520,11 @@ function touchend(event) {
     mx = fing.pageX - rect.left;
     my = fing.pageY - rect.top;
     
-    moveEnd(mx, my);
-    document.removeEventListener("touchmove", prevent, {passive: false});
+    if(movable == true) {
+        drawIcon(layerMove, 0, 0, 3);
+    }
     
-    drawIcon(layerMove, 0, 0, 3);
+    moveEnd(mx, my);
 }
 function touchcancel(event) {
     moveCancel();
