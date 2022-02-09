@@ -224,7 +224,7 @@ function initcanvas(){
         }
     }
     if(activePlayers.length == 0) {
-        playerNames = ["ホワイトc", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
+        playerNames = ["ホワイトd", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
         activePlayers = [];
         activePlayersNumber = [];
         activePlayersIcon = [];
@@ -448,6 +448,9 @@ function moveEnd(mx, my){
     
     arrayBoardColor[ay][ax] = selectColor;
     arrayBoardIcon[ay][ax] = selectIcon;
+    
+    selectColor = -1;
+    selectIcon = -1;
 }
 
 function moveCancel(){
@@ -509,10 +512,6 @@ function touchmove(event) {
     my = fing.pageY - rect.top;
     
     moving(mx, my);
-    
-    if(movable == true) {
-        drawIcon(layerMove, 0, 0, 2);
-    }
 }
 function touchend(event) {
     let rect = event.target.getBoundingClientRect();
