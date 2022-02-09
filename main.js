@@ -21,7 +21,7 @@ const blockH = 32;
 let prevX = 0;
 let prevY = 0;
 
-const paletteStartX = 6;
+const paletteStartX = 4;
 const paletteStartY = 15;
 
 const paletteW = 32;
@@ -37,16 +37,16 @@ const canvasW = blockW * canvasBlocksW;
 const canvasH = blockH * (boardBlocksH + paletteBlocksH);
 
 const arrayPaletteIcon = [
-    [-1, 22, 23, 8, 9, 12, 18, 14,　-1, 16, 17, -10, -11, -12, -13, -14],
-    [-1, 6, 7, 8, 9, 10, 11, 12, 13, -1, -1, -15, -16, -17, -18, -19],
-    [-1, 6, 7, 8, 9, 10, 11, 12, 13, 24, 25],
-    [-1, 6, 7, 8, 9, 10, 11, 14, 15, -1, 26, -1, 18, 19, 20, 21]
+    [-1, -1, -1, 22, 23, 8, 9, 12, 18, 14,　-1, 16, 17, -10, -11, -12, -13, -14],
+    [24, -1, -1, 6, 7, 8, 9, 10, 11, 12, 13, -1, -1, -15, -16, -17, -18, -19],
+    [25, -1, -1, 6, 7, 8, 9, 10, 11, 12, 13],
+    [26, -1, -1, 6, 7, 8, 9, 10, 11, 14, 15, -1, -1, -1, 18, 19, 20, 21]
 ];
 const arrayPaletteColor = [
-    [4, 4, 4, 4, 4, 4, 4, 4, -1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 3, 3, 3, 3, 3]
+    [-1, -1, 4, 4, 4, 4, 4, 4, 4, 4, -1, 0, 0, 0, 0, 0, 0, 0],
+    [-1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, 0],
+    [-1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [-1, -1, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 3, 3, 3, 3, 3]
 ];
 
 let selectIcon;
@@ -288,7 +288,7 @@ function initCanvas(){
     
     // アイコンパレット
     for(let j = 0; j < paletteBlocksH; j += 1) {
-        for(let i = 0; i < 16; i += 1) {
+        for(let i = 0; i < 18; i += 1) {
             let posX = paletteW * (i + paletteStartX);
             let posY = paletteH * (j + paletteStartY);
             
@@ -405,9 +405,11 @@ function moveStart(mx, my){
             selectColor = arrayPaletteColor[ay][ax];
             selectIcon = arrayPaletteIcon[ay][ax];
             
-            movable = true;
-            prevX = ax;
-            prevY = ay;
+            if(selectColor != -1 || selectIcon != -1) {
+                movable = true;
+                prevX = ax;
+                prevY = ay;
+            }
         }
     }
 }
