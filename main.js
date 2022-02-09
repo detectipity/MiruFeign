@@ -503,31 +503,25 @@ function mouseleave(event) {
 }
 
 function touchstart(event) {
-    //event.preventDefault();
-    let rect = event.target.getBoundingClientRect();
     let fing = event.touches[0];
+    let rect = fing.target.getBoundingClientRect();
     mx = fing.pageX - rect.left;
     my = fing.pageY - rect.top;
     
     moveStart(mx, my);
 }
 function touchmove(event) {
-//    if(movable == true) {
-//        event.preventDefault();
-//    }
-    let rect = event.target.getBoundingClientRect();
     let fing = event.touches[0];
+    let rect = fing.target.getBoundingClientRect();
     mx = fing.pageX - rect.left;
     my = fing.pageY - rect.top;
     
     moving(mx, my);
 }
 function touchend(event) {
-    //event.preventDefault();
     moveEnd();
 }
 function touchcancel(event) {
-    //event.preventDefault();
     moveCancel();
 }
 
