@@ -224,7 +224,7 @@ function initcanvas(){
         }
     }
     if(activePlayers.length == 0) {
-        playerNames = ["ホワイトg", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
+        playerNames = ["ホワイト", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
         activePlayers = [];
         activePlayersNumber = [];
         activePlayersIcon = [];
@@ -377,6 +377,8 @@ function moveStart(mx, my){
             }
             
             movable = true;
+            prevX = ax;
+            prevY = ay;
         }
     }
     else {
@@ -388,6 +390,8 @@ function moveStart(mx, my){
             selectIcon = arrayPaletteIcon[ay][ax];
             
             movable = true;
+            prevX = ax;
+            prevY = ay;
         }
     }
 }
@@ -397,21 +401,23 @@ function moving(mx, my){
         return;
     }
     
-    let posX = Math.floor(mx / blockW) * blockW;
-    let posY = Math.floor(my / blockH) * blockH;
+    let ax = Math.floor(mx / blockW);
+    let ay = Math.floor(my / blockH);
     
-    if(posX != prevX || posY != prevY) {
+    if(ax != prevX || ay != prevY) {
+        let posX = Math.floor(mx / blockW) * blockW;
+        let posY = Math.floor(my / blockH) * blockH;
         layerMove.clearRect(0, 0, canvasW, canvasH);
         drawIcon(layerMove, posX, posY, selectColor)
         drawIcon(layerMove, posX, posY, selectIcon)
         drawInitial(layerMove, posX, posY, selectIcon)
     }
     
-    prevX = posX;
-    prevY = posY;
+    prevX = ax;
+    prevY = ay;
 }
 
-function moveEnd(mx, my){
+function moveEnd(){
     if(movable == false) {
         return;
     }
@@ -420,12 +426,12 @@ function moveEnd(mx, my){
     
     layerMove.clearRect(0, 0, canvasW, canvasH);
     
-    if(my > paletteY){
+    let ax = prevX;
+    let ay = prevY;
+    
+    if(ay * blockH > paletteY){
         return
     }
-    
-    let ax = Math.floor(mx / blockW);
-    let ay = Math.floor(my / blockH);
     
     if(ax == 3 && ay > 0 && ay < 13) {
         return
@@ -478,11 +484,7 @@ function mousemove(event) {
     moving(mx, my);
 }
 function mouseup(event) {
-    let rect = event.target.getBoundingClientRect();
-    mx = event.clientX - rect.left;
-    my = event.clientY - rect.top;
-    
-    moveEnd(mx, my);
+    moveEnd();
 }
 function mouseleave(event) {
     moveCancel();
@@ -496,15 +498,6 @@ function touchstart(event) {
     my = fing.pageY - rect.top;
     
     moveStart(mx, my);
-    
-//    if(movable == true) {
-//        document.addEventListener("touchmove", prevent, {passive: false});
-//        drawIcon(layerMove, 0, 0, 1);
-//    }
-//    else {
-//        document.removeEventListener("touchmove", prevent, {passive: false});
-//    }
-    
 }
 function touchmove(event) {
     if(movable == true) {
@@ -518,27 +511,12 @@ function touchmove(event) {
     moving(mx, my);
 }
 function touchend(event) {
-    if(movable == true) {
-        drawIcon(layerMove, 0, 0, 3);
-    }
-    
-//    event.preventDefault();
-//    let rect = event.target.getBoundingClientRect();
-//    let fing = event.touches[0];
-//    mx = fing.pageX - rect.left;
-//    my = fing.pageY - rect.top;
-//
-//
-//    moveEnd(mx, my);
+    event.preventDefault();
+    moveEnd();
 }
 function touchcancel(event) {
-    moveCancel();
-    
-        drawIcon(layerMove, 0, 0, 4);
-}
-
-function prevent(event) {
     event.preventDefault();
+    moveCancel();
 }
 
 function drawIcon(layer, posX, posY, iconNumber) {
@@ -550,7 +528,7 @@ function drawIcon(layer, posX, posY, iconNumber) {
 function drawInitial(layer, posX, posY, iconNumber) {
     let word;
     if(iconNumber >= 24) {
-        word = charasInitial[selectIcon];
+        word = charasInitial[iconNumber];
         
         const colorNumber = iconNumber - 24 - Math.floor((iconNumber - 24) / 6)
         
