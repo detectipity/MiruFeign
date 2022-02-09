@@ -21,9 +21,6 @@ const blockH = 32;
 let prevX = 0;
 let prevY = 0;
 
-let selectImageX = 0;
-let selectImageY = 0;
-
 const paletteX = blockW * 4;
 const paletteY = blockH * 16;
 const paletteW = 32;
@@ -104,25 +101,13 @@ let charasInitial;
 
 onload = function() {
     makeCanvas();
-    // クリックに関する規定
-//    if (
-//        (navigator.userAgent.indexOf("iPhone") > 0
-//         || navigator.userAgent.indexOf("iPod") > 0
-//         || navigator.userAgent.indexOf("iPad") > 0
-//         || navigator.userAgent.indexOf("Android") > 0)
-//        ) {
-//        canvasBase.addEventListener("touchstart",touchfunc);
-//    }
-//    else {
-//        canvasBase.addEventListener("click",clickfunc);
-//    }
+    setEventListener();
 
     images = new Image();
     images.src = "FeignImages.png";
     
-    makeCanvasPlayer();
-
     images.onload = function(){
+        makeCanvasPlayer();
         initcanvas();
     }
 }
@@ -164,11 +149,26 @@ function makeCanvas() {
     canvasMove.style.left = px + "px";
     canvasMove.style.top = py + "px";
     document.getElementById("canvas").appendChild(canvasMove);
-    
-    canvasMove.addEventListener("mousedown", mousedown);
-    canvasMove.addEventListener("mousemove", mousemove);
-    canvasMove.addEventListener("mouseup", mouseup);
-    canvasMove.addEventListener("mouseleave", mouseleave);
+}
+
+function setEventListener() {
+    if (
+        (navigator.userAgent.indexOf("iPhone") > 0
+         || navigator.userAgent.indexOf("iPod") > 0
+         || navigator.userAgent.indexOf("iPad") > 0
+         || navigator.userAgent.indexOf("Android") > 0)
+        ) {
+            canvasMove.addEventListener("touchstart",touchstart);
+            canvasMove.addEventListener("touchmove",touchmove);
+            canvasMove.addEventListener("touchend",touchend);
+            canvasMove.addEventListener("touchcancel",touchcancel);
+        }
+    else {
+        canvasMove.addEventListener("mousedown", mousedown);
+        canvasMove.addEventListener("mousemove", mousemove);
+        canvasMove.addEventListener("mouseup", mouseup);
+        canvasMove.addEventListener("mouseleave", mouseleave);
+    }
 }
 
 function makeCanvasPlayer() {
@@ -329,7 +329,7 @@ function initcanvas(){
 }
 
 function resetBoard(){
-    let check = confirm("盤面をリセットしちゃうけど、よい？");
+    let check = confirm("盤面をリセットしちゃいます。よいですか？");
     if(check == true){
         for(let i = 0; i < 15; i += 1) {
             let inputName = document.getElementById("player" + i);
@@ -341,11 +341,7 @@ function resetBoard(){
     }
 }
 
-function mousedown(event){
-    let rect = event.target.getBoundingClientRect();
-    let mx = event.clientX - rect.left;
-    let my = event.clientY - rect.top;
-    
+function moveStart(mx, my){
     if(my < paletteY){
         let ax = Math.floor(mx / blockW);
         let ay = Math.floor(my / blockH);
@@ -380,7 +376,6 @@ function mousedown(event){
                 drawInitial(layerIcon, posX, posY, pocketIcon)
             }
             
-            
             movable = true;
         }
     }
@@ -397,14 +392,10 @@ function mousedown(event){
     }
 }
 
-function mousemove(event){
+function moving(mx, my){
     if(movable == false) {
         return;
     }
-    
-    let rect = event.target.getBoundingClientRect();
-    let mx = event.clientX - rect.left;
-    let my = event.clientY - rect.top;
     
     let posX = Math.floor(mx / blockW) * blockW;
     let posY = Math.floor(my / blockH) * blockH;
@@ -420,16 +411,12 @@ function mousemove(event){
     prevY = posY;
 }
 
-function mouseup(event){
+function moveEnd(mx, my){
     if(movable == false) {
         return;
     }
     
     movable = false;
-    
-    let rect = event.target.getBoundingClientRect();
-    let mx = event.clientX - rect.left;
-    let my = event.clientY - rect.top;
     
     layerMove.clearRect(0, 0, canvasW, canvasH);
     
@@ -463,7 +450,7 @@ function mouseup(event){
     arrayBoardIcon[ay][ax] = selectIcon;
 }
 
-function mouseleave(event){
+function moveCancel(){
     if(movable == false) {
         return;
     }
@@ -473,28 +460,58 @@ function mouseleave(event){
     layerMove.clearRect(0, 0, canvasW, canvasH);
 }
 
-//// クリック時動作関数
-//function clickfunc(event){
-//    let rect = event.target.getBoundingClientRect();
-//    mx = event.clientX - rect.left;
-//    my = event.clientY - rect.top;
-//    touchsc();
-//
-//    layerBase.drawImage(img_baka, mx, my);
-//}
-//
-//// タッチ時動作関数
-//function touchfunc(event){
-//    let rect = event.target.getBoundingClientRect();
-//    let fing=event.touches[0];
-//    mx=fing.pageX - rect.left;
-//    my=fing.pageY - rect.top;
-//    touchsc();
-//}
-//
-//// タッチ・クリック処理
-//function touchsc(){
-//}
+function mousedown(event) {
+    let rect = event.target.getBoundingClientRect();
+    mx = event.clientX - rect.left;
+    my = event.clientY - rect.top;
+    
+    moveStart(mx, my);
+}
+function mousemove(event) {
+    let rect = event.target.getBoundingClientRect();
+    mx = event.clientX - rect.left;
+    my = event.clientY - rect.top;
+    
+    moving(mx, my);
+}
+function mouseup(event) {
+    let rect = event.target.getBoundingClientRect();
+    mx = event.clientX - rect.left;
+    my = event.clientY - rect.top;
+    
+    moveEnd(mx, my);
+}
+function mouseleave(event) {
+    moveCancel();
+}
+
+function touchstart(event) {
+    let rect = event.target.getBoundingClientRect();
+    let fing = event.touches[0];
+    mx = fing.pageX - rect.left;
+    my = fing.pageY - rect.top;
+    
+    moveStart(mx, my);
+}
+function touchmove(event) {
+    let rect = event.target.getBoundingClientRect();
+    let fing = event.touches[0];
+    mx = fing.pageX - rect.left;
+    my = fing.pageY - rect.top;
+    
+    moving(mx, my);
+}
+function touchend(event) {
+    let rect = event.target.getBoundingClientRect();
+    let fing = event.touches[0];
+    mx = fing.pageX - rect.left;
+    my = fing.pageY - rect.top;
+    
+    moveEnd(mx, my);
+}
+function touchcancel(event) {
+    moveCancel();
+}
 
 function drawIcon(layer, posX, posY, iconNumber) {
     const copyX = originW * (iconNumber % 6);
