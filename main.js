@@ -506,6 +506,7 @@ function mouseleave(event) {
 }
 
 function touchstart(event) {
+    preventDefault();
     let rect = event.target.getBoundingClientRect();
     let fing = event.touches[0];
     mx = fing.clientX - rect.left;
