@@ -57,31 +57,32 @@ let arrayBoardColor;
 let arrayBoardIconPocket;
 let arrayBoardColorPocket;
 
-const charaColors = [
-    "rgb(255,255,255)",
-    "rgb(179,0,11)",
-    "rgb(101,67,33)",
-    "rgb(42,91,43)",
-    "rgb(42,123,12)",
-    "rgb(131,255,70)",
-    "rgb(255,227,82)",
-    "rgb(255,135,32)",
-    "rgb(255,68,6)",
-    "rgb(56,22,227)",
-    "rgb(75,111,215)",
-    "rgb(49,215,199)",
-    "rgb(255,143,179)",
-    "rgb(255,0,223)",
-    "rgb(113,52,139)"
-]
+const charasInfo = [
+    ["white",       27, "rgb(255,255,255)",    true],
+    ["orange",      34, "rgb(255,135,32)",     true],
+    ["purple",      41, "rgb(113,52,139)",     false],
+    ["green",       31, "rgb(42,123,12)",      false],
+    ["blue",        37, "rgb(75,111,215)",     false],
+    ["red",         28, "rgb(179,0,11)",       false],
+    ["yellow",      33, "rgb(255,227,82)",     true],
+    ["lime",        32, "rgb(131,255,70)",     true],
+    ["cyan",        38, "rgb(49,215,199)",     true],
+    ["pink",        39, "rgb(255,143,179)",    true],
+    ["brown",       29, "rgb(101,67,33)",      false],
+    ["magenta",     40, "rgb(255,0,223)",      false],
+    ["darkorange",  35, "rgb(255,68,6)",       false],
+//    ["darkgreen",   30, "rgb(42,91,43)",       false],
+//    ["darkblue",    36, "rgb(56,22,227)",      false],
+];
 
-const charaFontColors = [
-    true, false, false, false, false,
-    true, true, true, false, false,
-    false, true, true, false, false
-]
+const reverseCharas = [0, 5, 10, 0, 3, 7, 6, 1, 12, 0, 4, 8, 9, 11, 2];
 
-let playerNames = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""];
+const defaultNames = ["ホワイト", "オレンジ", "パープル", "グリーン", "ブルー", "レッド", "イエロー", "ライム", "シアン", "ピンク", "ブラウン", "マゼンタ", ""];
+
+let playerNames = [];
+for(let i = 0; i < charasInfo.length; i += 1) {
+    playerNames[i] = "";
+}
 
 let activePlayers;
 let activePlayersNumber;
@@ -171,8 +172,8 @@ function makeCanvasPlayer() {
     let layerBasePlayer = canvasPlayer.getContext("2d");
     formPlayers.appendChild(canvasPlayer);
     
-    for(let i = 0; i < 15; i += 1) {
-        let iconNumber = 27 + i
+    for(let i = 0; i < charasInfo.length; i += 1) {
+        let iconNumber = charasInfo[i][1];
         let posX = originW * ((i % 3) * 8);
         let posY = originH * Math.floor(i / 3);
         drawIcon(layerBasePlayer, posX, posY, iconNumber)
@@ -225,35 +226,32 @@ function initCanvas(){
     layerBase.textBaseline = "middle";
     
     // プレイヤー名と色の確定
+    let checkName = false;
+    for(let i = 0; i < charasInfo.length; i += 1) {
+        if(playerNames[i] != "") {
+            checkName = true;
+        }
+    }
+    if(checkName == false){
+        for(let i = 0; i < charasInfo.length; i += 1) {
+            playerNames[i] = defaultNames[i];
+        }
+    }
+    
     activePlayers = [];
     activePlayersNumber = [];
     activePlayersIcon = [];
-    for(let i = 0; i < 15; i += 1) {
+    for(let i = 0; i < charasInfo.length; i += 1) {
         if(playerNames[i] != "") {
             activePlayers.push(playerNames[i]);
             activePlayersNumber.push(i);
-            activePlayersIcon.push(27 + i);
+            activePlayersIcon.push(charasInfo[i][1]);
         }
     }
-    if(activePlayers.length == 0) {
-        // フォーム未入力の場合のデフォルトデータ
-        playerNames = ["ホワイト", "レッド", "ブラウン", "", "グリーン", "ライム", "イエロー", "", "オレンジ", "", "ブルー", "シアン", "ピンク", "マゼンタ", "パープル"];
-        activePlayers = [];
-        activePlayersNumber = [];
-        activePlayersIcon = [];
-        for(let i = 0; i < 15; i += 1) {
-            if(playerNames[i] != "") {
-                activePlayers.push(playerNames[i]);
-                activePlayersNumber.push(i);
-                activePlayersIcon.push(27 + i);
-            }
-        }
-    }
-    
-    charasInitial = [];
     
     // プレイヤー名
     layerBase.font = "16px sans-serif";
+    charasInitial = [];
     
     for(let i = 0; i < 12; i += 1) {
         if(i == activePlayers.length) {
@@ -261,10 +259,10 @@ function initCanvas(){
         }
         layerBase.beginPath();
         layerBase.rect(0, blockH * (i + 1), blockW * 4, blockH);
-        layerBase.fillStyle = charaColors[activePlayersNumber[i]];
+        layerBase.fillStyle = charasInfo[activePlayersNumber[i]][2];
         layerBase.fill();
         
-        if(charaFontColors[activePlayersNumber[i]] == true) {
+        if(charasInfo[activePlayersNumber[i]][3] == true) {
             layerBase.fillStyle = "black";
         }
         else {
@@ -344,7 +342,7 @@ function initCanvas(){
 function resetBoard(){
     let check = confirm("盤面をリセットしちゃいます。よいですか？");
     if(check == true){
-        for(let i = 0; i < 15; i += 1) {
+        for(let i = 0; i < charasInfo.length; i += 1) {
             let inputName = document.getElementById("player" + i);
             playerNames[i] = inputName.value;
         }
@@ -539,9 +537,9 @@ function drawInitial(layer, posX, posY, iconNumber) {
     if(iconNumber >= 27) {
         word = charasInitial[iconNumber];
         
-        const colorNumber = iconNumber - 27
+        const colorNumber = reverseCharas[iconNumber - 27];
         
-        if(charaFontColors[colorNumber] == true) {
+        if(charasInfo[colorNumber][3] == true) {
             layer.fillStyle = "black";
         }
         else {
