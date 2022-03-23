@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang = "ja">
+    <head>
+        <meta charset = "utf-8" />
+        <meta name = "viewport" content = "initial-scale = 1.0, width = device-width">
+        
+        <title>みるふぇいん</title>
+        <link rel = "icon" type = "image/png" href = "favicon.png">
+        <link rel = "apple-touch-icon" href = "favicon.png">
+        <script src = "develop.js"></script>
+    </head>
+    
+    <body>
+        <div style = "font-family: sans-serif">みるふぇいん：Feign盤面整理ツール　＜ご自由にお使いください＞</div>
+        <br>
+        <div id = "canvas">
+            <canvas id = "main"></canvas>
+        </div>
+        <br>
+        
+        <form id = "io">
+            <input type="button" value="盤面をリセットする" onClick="resetBoard()"/>
+            <span style = "font-family: sans-serif">下のフォームに名前を入力した後に盤面をリセットすると、盤面に名前が反映されます。12名まで。</span>
+        </form>
+        <br>
+        <form id = "players"></form>
+    </body>
+</html>
