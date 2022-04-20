@@ -37,16 +37,16 @@ const canvasW = blockW * canvasBlocksW;
 const canvasH = blockH * (boardBlocksH + paletteBlocksH);
 
 const arrayPaletteIcon = [
-    [-1, -1, -1, 22, 23, 8, 9, 12, 14, 18, 20, 16, 17, -10, -11, -12, -13, -14],
-    [24, -1, -1, 6, 7, 8, 9, 10, 11, 12, 13, -1, -1, -15, -16, -17, -18, -19],
-    [25, -1, -1, 6, 7, 8, 9, 10, 11, 12, 13],
-    [26, -1, -1, 6, 7, 8, 9, 10, 11, 14, 15, -1, -1, -1, 18, 19, 20, 21]
+    [ -1, -1, -1, -1, -1,  8,  9, -1, 11, 12, -1, 16, 17, 22, 23, 18, 19, 20],
+    [ 24, -1, -1,  6,  7,  8,  9, 10, 11, 12, 13, -1, -1,-10,-11,-12,-13,-14],
+    [ 25, -1, -1,  6,  7,  8,  9, 10, 11, 12, 13, -1, -1,-15,-16,-17,-18,-19],
+    [ 26, -1, -1,  6,  7,  8,  9, 10, 11, 14, 15, -1, -1, -1, 21, 18, 19, 20]
 ];
 const arrayPaletteColor = [
-    [-1, -1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0],
-    [-1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, 0],
-    [-1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [-1, -1, 2, 2, 2, 2, 2, 2, 2, 2, 2, -1, -1, 3, 3, 3, 3, 3]
+    [ -1, -1,  4, -1, -1,  4,  4, -1,  4,  4, -1,  0,  0,  5,  5,  5,  5,  5],
+    [ -1, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1, -1,  0,  0,  0,  0,  0],
+    [ -1, -1,  1,  1,  1,  1,  1,  1,  1,  1,  1, -1, -1,  0,  0,  0,  0,  0],
+    [ -1, -1,  2,  2,  2,  2,  2,  2,  2,  2,  2, -1, -1,  3,  3,  3,  3,  3]
 ];
 
 let selectIcon;
@@ -250,7 +250,6 @@ function initCanvas(){
     }
     
     // プレイヤー名
-    layerBase.font = "16px sans-serif";
     charasInitial = [];
     
     for(let i = 0; i < 12; i += 1) {
@@ -269,7 +268,8 @@ function initCanvas(){
             layerBase.fillStyle = "white";
         }
         layerBase.textAlign = "end";
-        layerBase.fillText(activePlayers[i], blockW * 3, blockH * (i + 2) - blockH / 2);
+        layerBase.font = "14px sans-serif";
+        layerBase.fillText(activePlayers[i], blockW * 3 - 2, blockH * (i + 2) - blockH / 2 + 2);
         
         // キャラアイコン
         let iconNumber = activePlayersIcon[i];
@@ -279,6 +279,7 @@ function initCanvas(){
         
         let initial = activePlayers[i].charAt(0);
         layerBase.textAlign = "center";
+        layerBase.font = "16px sans-serif";
         layerBase.fillText(initial, blockW * 4 - blockW / 2, blockH * (i + 2) - blockH / 2);
         
         charasInitial[iconNumber] = initial;
