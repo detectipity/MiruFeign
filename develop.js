@@ -36,17 +36,20 @@ const paletteBlocksH = 4;
 const canvasW = blockW * canvasBlocksW;
 const canvasH = blockH * (boardBlocksH + paletteBlocksH);
 
+const numberIconPaletteW = 21
+const numberCharaIconStart = 33
+
 const arrayPaletteIcon = [
-    [ -1, -1, -1, -1, -1,  8,  9, -1, 11, 12, -1, 16, 17, 22, 23, 18, 19, 20],
-    [ 24, -1, -1,  6,  7,  8,  9, 10, 11, 12, 13, -1, -1,-10,-11,-12,-13,-14],
-    [ 25, -1, -1,  6,  7,  8,  9, 10, 11, 12, 13, -1, -1,-15,-16,-17,-18,-19],
-    [ 26, -1, -1,  6,  7,  8,  9, 10, 11, 14, 15, -1, -1, -1, 21, 18, 19, 20]
+    [ -1, -1, -1, -1, -1,  8,  9, -1, -1, 11, 12, -1, 16, 17, 22, 23, 18, 19, 20, 25, 26],
+    [ 30, -1, -1,  6,  7,  8,  9, 10, 24, 11, 12, 13, -1, -1,-10,-11,-12,-13,-14, -1, -1],
+    [ 31, -1, -1,  6,  7,  8,  9, 10, 24, 11, 12, 13, -1, -1,-15,-16,-17,-18,-19, -1, -1],
+    [ 32, -1, -1,  6,  7,  8,  9, 10, 24, 11, 14, 15, -1, -1, -1, 21, 18, 19, 20, 25, 26]
 ];
 const arrayPaletteColor = [
-    [ -1, -1,  4, -1, -1,  4,  4, -1,  4,  4, -1,  0,  0,  5,  5,  5,  5,  5],
-    [ -1, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1, -1,  0,  0,  0,  0,  0],
-    [ -1, -1,  1,  1,  1,  1,  1,  1,  1,  1,  1, -1, -1,  0,  0,  0,  0,  0],
-    [ -1, -1,  2,  2,  2,  2,  2,  2,  2,  2,  2, -1, -1,  3,  3,  3,  3,  3]
+    [ -1, -1,  4, -1, -1,  4,  4, -1, -1,  4,  4, -1,  0,  0,  5,  5,  5,  5,  5,  5,  5],
+    [ -1, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1, -1,  0,  0,  0,  0,  0, -1, -1],
+    [ -1, -1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, -1, -1,  0,  0,  0,  0,  0, -1, -1],
+    [ -1, -1,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, -1, -1,  3,  3,  3,  3,  3,  3,  3]
 ];
 
 let selectIcon;
@@ -58,21 +61,21 @@ let arrayBoardIconPocket;
 let arrayBoardColorPocket;
 
 const charasInfo = [
-    ["white",       27, "rgb(255,255,255)",    true],
-    ["orange",      34, "rgb(255,135,32)",     true],
-    ["purple",      41, "rgb(113,52,139)",     false],
-    ["green",       31, "rgb(42,123,12)",      false],
-    ["blue",        37, "rgb(75,111,215)",     false],
-    ["red",         28, "rgb(179,0,11)",       false],
-    ["yellow",      33, "rgb(255,227,82)",     true],
-    ["lime",        32, "rgb(131,255,70)",     true],
-    ["cyan",        38, "rgb(49,215,199)",     true],
-    ["pink",        39, "rgb(255,143,179)",    true],
-    ["brown",       29, "rgb(101,67,33)",      false],
-    ["magenta",     40, "rgb(255,0,223)",      false],
-    ["darkorange",  35, "rgb(255,68,6)",       false],
-//    ["darkgreen",   30, "rgb(42,91,43)",       false],
-//    ["darkblue",    36, "rgb(56,22,227)",      false],
+    ["white",        0, "rgb(255,255,255)",    true],
+    ["orange",       7, "rgb(255,135,32)",     true],
+    ["purple",      14, "rgb(113,52,139)",     false],
+    ["green",        4, "rgb(42,123,12)",      false],
+    ["blue",        10, "rgb(75,111,215)",     false],
+    ["red",          1, "rgb(179,0,11)",       false],
+    ["yellow",       6, "rgb(255,227,82)",     true],
+    ["lime",         5, "rgb(131,255,70)",     true],
+    ["cyan",        11, "rgb(49,215,199)",     true],
+    ["pink",        12, "rgb(255,143,179)",    true],
+    ["brown",        2, "rgb(101,67,33)",      false],
+    ["magenta",     13, "rgb(255,0,223)",      false],
+    ["darkorange",   8, "rgb(255,68,6)",       false],
+//    ["darkgreen",    3, "rgb(42,91,43)",       false],
+//    ["darkblue",     9, "rgb(56,22,227)",      false],
 ];
 
 const reverseCharas = [0, 5, 10, 0, 3, 7, 6, 1, 12, 0, 4, 8, 9, 11, 2];
@@ -94,7 +97,7 @@ onload = function() {
     setEventListener();
 
     images = new Image();
-    images.src = "FeignImages.png";
+    images.src = "FeignImages030.png";
     
     images.onload = function(){
         makeCanvasPlayer();
@@ -173,7 +176,7 @@ function makeCanvasPlayer() {
     formPlayers.appendChild(canvasPlayer);
     
     for(let i = 0; i < charasInfo.length; i += 1) {
-        let iconNumber = charasInfo[i][1];
+        let iconNumber = charasInfo[i][1] + numberCharaIconStart;
         let posX = originW * ((i % 3) * 8);
         let posY = originH * Math.floor(i / 3);
         drawIcon(layerBasePlayer, posX, posY, iconNumber)
@@ -245,7 +248,7 @@ function initCanvas(){
         if(playerNames[i] != "") {
             activePlayers.push(playerNames[i]);
             activePlayersNumber.push(i);
-            activePlayersIcon.push(charasInfo[i][1]);
+            activePlayersIcon.push(charasInfo[i][1] + numberCharaIconStart);
         }
     }
     
@@ -287,7 +290,7 @@ function initCanvas(){
     
     // アイコンパレット
     for(let j = 0; j < paletteBlocksH; j += 1) {
-        for(let i = 0; i < 18; i += 1) {
+        for(let i = 0; i < numberIconPaletteW; i += 1) {
             let posX = paletteW * (i + paletteStartX);
             let posY = paletteH * (j + paletteStartY);
             
@@ -535,10 +538,10 @@ function drawIcon(layer, posX, posY, iconNumber) {
 
 function drawInitial(layer, posX, posY, iconNumber) {
     let word;
-    if(iconNumber >= 27) {
+    if(iconNumber >= numberCharaIconStart) {
         word = charasInitial[iconNumber];
         
-        const colorNumber = reverseCharas[iconNumber - 27];
+        const colorNumber = reverseCharas[iconNumber - numberCharaIconStart];
         
         if(charasInfo[colorNumber][3] == true) {
             layer.fillStyle = "black";
